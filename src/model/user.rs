@@ -3,9 +3,9 @@ use std::collections::HashMap;
 use derive_getters::{Dissolve, Getters};
 use serde::{Deserialize, Deserializer};
 
-use super::realm::{Realm, RealmID};
+use super::{course::SelfUserCourse, realm::{Realm, RealmID}};
 
-/// GET /api/user
+// GET /api/user
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
 pub struct SelfUser {
     courses: Vec<SelfUserCourse>,
@@ -54,7 +54,7 @@ pub struct DesktopNotificationScopes {
     watch: bool,
 }
 
-fn digest_interval_deserialize<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
+pub(crate) fn digest_interval_deserialize<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
 where
     D: Deserializer<'de>,
 {
