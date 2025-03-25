@@ -3,6 +3,8 @@
 use reqwest::RequestBuilder;
 use serde_json::Value;
 
+pub mod model;
+
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("reqwest error: {0}")]
