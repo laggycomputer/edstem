@@ -1,7 +1,7 @@
 // #![deny(missing_docs))
 
 use reqwest::RequestBuilder;
-use serde_json::Value;
+use serde::{Deserialize, Serialize};
 
 pub mod model;
 
@@ -18,15 +18,15 @@ pub type Result<T> = std::result::Result<T, self::Error>;
 #[derive(Clone, Debug)]
 pub struct Client {
     http: reqwest::Client,
-    endpoint: String,
+    base_url: String,
     token: String,
     user_agent: String,
 }
 
 impl Client {
-    async fn request<T>(&self, request: RequestBuilder) -> Result<Value>
+    async fn request<T>(&self, request: RequestBuilder) -> Result<T>
     where
-        T: for<'de> serde::de::Deserialize<'de>,
+        T: for<'de> Deserialize<'de> 
     {
         let built = request
             .header("Authorization", format!("Bearer {}", self.token))
@@ -36,5 +36,16 @@ impl Client {
         let response = self.http.execute(built).await?;
 
         Ok(response.json().await?)
+    }
+
+    async fn get<T>(&self, endpoint: &str, parameters: &[(impl Serialize, impl Serialize)]) -> Result<T> 
+    where
+        T: for<'de> Deserialize<'de>
+    {
+        Ok(self.request(
+            self.http
+                .get(format!("{}/{}", self.base_url, endpoint))
+                .query(parameters)
+            ).await?)
     }
 }
