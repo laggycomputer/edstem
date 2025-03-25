@@ -43,7 +43,7 @@ pub struct Realm {
     type_: String,
     domain: String,
     associated_domains: String,
-    features: HashMap<String, bool>,
+    features: (),
     settings: RealmSettings,
     affiliate_realm_id: Option<RealmID>,
 }

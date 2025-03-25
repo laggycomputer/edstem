@@ -112,7 +112,7 @@ struct User {
     email: String,
     username: Option<String>,
     avatar: String,
-    features: HashMap<String, bool>,
+    features: (),
     settings: UserSettings,
     activated: bool,
     created_at: String,
