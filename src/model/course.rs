@@ -51,6 +51,13 @@ pub struct CourseFeatures {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+pub struct Category {
+    name: String,
+    subcategories: Vec<Box<Category>>,
+    thread_template: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
 pub struct CourseDiscussionSettings {
     /// can private threads be created?
     private: bool,
