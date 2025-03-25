@@ -1,7 +1,10 @@
 use derive_getters::{Dissolve, Getters};
 use serde::{Deserialize, Deserializer};
 
-use super::{course::{CourseRole, Role, SelfUserCourse}, realm::{Realm, RealmID}};
+use super::{
+    course::{CourseRole, Role, SelfUserCourse},
+    realm::{Realm, RealmID},
+};
 
 // GET /api/user
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]

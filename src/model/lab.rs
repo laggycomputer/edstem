@@ -7,5 +7,3 @@ pub struct LabID(u64);
 // i have no idea what this does
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
 pub struct Lab {}
-
-

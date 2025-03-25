@@ -1,5 +1,6 @@
 // #![deny(missing_docs))
 
+use model::user::SelfUser;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
@@ -23,10 +24,12 @@ pub struct Client {
     user_agent: String,
 }
 
+type EmptyParams = &'static [((), ())];
+
 impl Client {
     async fn request<T>(&self, request: RequestBuilder) -> Result<T>
     where
-        T: for<'de> Deserialize<'de> 
+        T: for<'de> Deserialize<'de>,
     {
         let built = request
             .header("Authorization", format!("Bearer {}", self.token))
@@ -38,14 +41,24 @@ impl Client {
         Ok(response.json().await?)
     }
 
-    async fn get<T>(&self, endpoint: &str, parameters: &[(impl Serialize, impl Serialize)]) -> Result<T> 
+    async fn get<T>(
+        &self,
+        endpoint: &str,
+        parameters: Option<&[(impl Serialize, impl Serialize)]>,
+    ) -> Result<T>
     where
-        T: for<'de> Deserialize<'de>
+        T: for<'de> Deserialize<'de>,
     {
-        Ok(self.request(
-            self.http
-                .get(format!("{}/{}", self.base_url, endpoint))
-                .query(parameters)
-            ).await?)
+        let mut builder = self.http.get(format!("{}{}", self.base_url, endpoint));
+
+        if let Some(params) = parameters {
+            builder = builder.query(params);
+        };
+
+        Ok(self.request(builder).await?)
+    }
+
+    pub async fn get_self_user(&self) -> Result<SelfUser> {
+        Ok(self.get("/api/user", None::<EmptyParams>).await?)
     }
 }

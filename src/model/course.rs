@@ -1,7 +1,11 @@
 use derive_getters::{Dissolve, Getters};
 use serde::Deserialize;
 
-use super::{lab::{Lab, LabID}, realm::RealmID, user::{digest_interval_deserialize, UserID}};
+use super::{
+    lab::{Lab, LabID},
+    realm::RealmID,
+    user::{UserID, digest_interval_deserialize},
+};
 
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
 pub struct CourseID(u64);
@@ -182,7 +186,7 @@ pub struct CourseSettings {
     challenge_workspace: CourseWorkspaceSettings,
     code_editor: CourseCodeEditorSettings,
     theme: CourseTheme,
-    role_labels: CourseRoleLabels, 
+    role_labels: CourseRoleLabels,
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
@@ -209,4 +213,3 @@ pub struct SelfUserCourse {
     /// ISO 8601
     last_active: String,
 }
-
