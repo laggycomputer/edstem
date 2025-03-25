@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use derive_getters::{Dissolve, Getters};
 use serde::{Deserialize, Deserializer};
 
-use super::{course::SelfUserCourse, realm::{Realm, RealmID}};
+use super::{course::{CourseRole, Role, SelfUserCourse}, realm::{Realm, RealmID}};
 
 // GET /api/user
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
@@ -107,7 +107,7 @@ struct UserSettings {
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
 struct User {
     id: UserID,
-    role: String,
+    role: CourseRole,
     name: String,
     email: String,
     username: Option<String>,
@@ -116,7 +116,7 @@ struct User {
     settings: UserSettings,
     activated: bool,
     created_at: String,
-    course_role: Option<String>,
+    course_role: Option<Role>,
     secondary_emails: Vec<String>,
     has_password: bool,
     is_lti: bool,
