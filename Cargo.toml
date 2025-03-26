@@ -1,6 +1,6 @@
 [package]
 name = "edstem"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Dante Dam <laggycomputer@yahoo.com>"]
 edition = "2024"
 description = "Async API wrapper to Ed Discussion"
