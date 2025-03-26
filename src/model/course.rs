@@ -93,6 +93,7 @@ pub struct CourseDiscussionSettings {
     categories: Vec<Category>,
     thread_templates_enabled: bool,
     category_unselected: bool,
+    #[serde(default)]
     snippet_langauges: Vec<String>,
     /// when users add code snippets to their posts, which language is default?
     default_snippet_language: String,
@@ -153,7 +154,7 @@ pub struct CourseWorkspaceSettings {
     saturn_override: bool,
     saturn_default_kernel: String,
     disable_student_workspace_upload: bool,
-    extra_paths: bool,
+    extra_paths: String,
     // env: Option<_>,
     settings: CourseWorkspaceSettingsInner,
 }
