@@ -8,7 +8,7 @@
 //! all datetime fields are timezone-qualified ISO 8601 to microsecond precision
 #![deny(missing_docs)]
 
-use model::{thread::CourseThreads, user::SelfUser};
+use model::{thread::{CourseThreads, Thread}, user::SelfUser};
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
@@ -79,6 +79,12 @@ impl Client {
     /// Get the [`CourseThreads`] pertaining to a course.
     pub async fn get_course_threads(&self, id: impl Into<u64>) -> Result<CourseThreads> {
         let endpoint = format!("/api/courses/{}/threads", id.into());
+        Ok(self.get(&*endpoint, None::<EmptyParams>).await?)
+    }
+
+    /// Get a [`Thread`] by ID.
+    pub async fn get_thread(&self, id: impl Into<u64>) -> Result<Thread> {
+        let endpoint = format!("/api/threads/{}", id.into());
         Ok(self.get(&*endpoint, None::<EmptyParams>).await?)
     }
 }

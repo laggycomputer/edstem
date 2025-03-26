@@ -46,9 +46,20 @@ pub struct Reply {
     comments: Vec<Reply>,
 }
 
-
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
 pub struct ThreadID(u64);
+
+impl Into<u64> for ThreadID {
+    fn into(self) -> u64 {
+        self.0
+    }
+}
+
+impl ThreadID {
+    pub async fn get(&self, client: &crate::Client) -> crate::Result<Thread> {
+        client.get_thread(self.clone()).await
+    }
+}
 
 pub(crate) fn anonymous_id_deserialize<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
 where
@@ -169,12 +180,6 @@ pub struct CourseThreads {
     sort_key: String,
     threads: Vec<PartialThread>,
     users: Vec<ThreadParticipant>,
-}
-
-impl CourseThreads {
-    pub async fn get(client: &crate::Client, course_id: &CourseID) -> crate::Result<Self> {
-        client.get_course_threads(course_id.clone()).await
-    }
 }
 
 /// Data from a thread when requested by ID
