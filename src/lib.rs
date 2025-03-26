@@ -1,4 +1,10 @@
-// #![deny(missing_docs))
+//! API for Ed Discussion (https://edstem.org).
+//! Request an API key at https://edstem.org/us/settings/api-tokens.
+//!
+//! ## notes
+//!
+//! all `avatar` fields are an ID; the actual image is accessible at https://static.us.edusercontent.com/avatars/{id}
+#![deny(missing_docs)]
 
 use model::user::SelfUser;
 use reqwest::RequestBuilder;
