@@ -177,3 +177,9 @@ pub struct CourseThreads {
     threads: Vec<PartialThread>,
     users: Vec<ThreadParticipant>,
 }
+
+impl CourseThreads {
+    pub async fn get(client: &crate::Client, course_id: &CourseID) -> crate::Result<Self> {
+        client.get_course_threads(course_id.clone()).await
+    }
+}

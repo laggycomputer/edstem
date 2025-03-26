@@ -2,9 +2,7 @@ use derive_getters::{Dissolve, Getters};
 use serde::Deserialize;
 
 use super::{
-    lab::{Lab, LabID},
-    realm::RealmID,
-    user::{UserID, digest_interval_deserialize},
+    lab::{Lab, LabID}, realm::RealmID, thread::CourseThreads, user::{digest_interval_deserialize, UserID}
 };
 
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
@@ -13,6 +11,12 @@ pub struct CourseID(u64);
 impl Into<u64> for CourseID {
     fn into(self) -> u64 {
         self.0
+    }
+}
+
+impl CourseID {
+    pub async fn get_threads(&self, client: &crate::Client) -> crate::Result<CourseThreads> {
+        client.get_course_threads(self.clone()).await
     }
 }
 
