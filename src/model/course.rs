@@ -10,6 +10,12 @@ use super::{
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
 pub struct CourseID(u64);
 
+impl Into<u64> for CourseID {
+    fn into(self) -> u64 {
+        self.0
+    }
+}
+
 /// overrides of global settings for a single course
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
 pub struct CourseRoleSettings {
