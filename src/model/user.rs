@@ -6,7 +6,7 @@ use super::{
     realm::{Realm, RealmID},
 };
 
-// GET /api/user
+/// GET /api/user
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
 pub struct SelfUser {
     courses: Vec<SelfUserCourse>,
