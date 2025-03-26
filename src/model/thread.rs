@@ -183,3 +183,57 @@ impl CourseThreads {
         client.get_course_threads(course_id.clone()).await
     }
 }
+
+/// Data from a thread when requested by ID
+#[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+pub struct Thread {
+    id: ThreadID,
+    user_id: UserID,
+    course_id: CourseID,
+    original_id: Option<ThreadID>,
+    editor_id: Option<UserID>,
+    accepted_id: Option<ReplyID>,
+    duplicate_id: Option<ThreadID>,
+    number: u64,
+    #[serde(rename = "type")]
+    type_: ThreadType,
+    title: String,
+    content: String,
+    document: String,
+    category: String,
+    subcategory: String,
+    subsubcategory: String,
+    flag_count: u64,
+    star_count: u64,
+    view_count: u64,
+    unique_view_count: u64,
+    vote_count: u64,
+    reply_count: u64,
+    unresolved_count: u64,
+    is_locked: bool,
+    is_pinned: bool,
+    is_private: bool,
+    is_endorsed: bool,
+    is_student_answered: bool,
+    is_staff_answered: bool,
+    is_archived: bool,
+    is_anonymous: bool,
+    is_megathread: bool,
+    anonymous_comments: bool,
+    approved_status: String,
+    created_at: String,
+    updated_at: String,
+    deleted_at: Option<String>,
+    pinned_at: Option<String>,
+    #[serde(deserialize_with = "anonymous_id_deserialize")]
+    anonymous_id: Option<u64>,
+    vote: u64,
+    is_seen: bool,
+    is_starred: bool,
+    is_watched: ThreadWatchStatus,
+    glanced_at: String,
+    new_reply_count: u64,
+    duplicate_title: Option<String>,
+    answers: Vec<Reply>,
+    comments: Vec<Reply>,
+}
