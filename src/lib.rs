@@ -6,22 +6,27 @@
 //! all `avatar` fields are an ID; the actual image is accessible at https://static.us.edusercontent.com/avatars/{id}
 #![deny(missing_docs)]
 
-use model::user::SelfUser;
+use model::{thread::CourseThreads, user::SelfUser};
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
 pub mod model;
 
+/// Unified error type from the crate.
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// Error from underlying `reqwest`, e.g. 403 or connectivity error.
     #[error("reqwest error: {0}")]
     Reqwest(#[from] reqwest::Error),
+    /// Error from underlying `serde_json`, i.e. JSON parsing has gone wrong.
     #[error("error deserializing json: {0}")]
     Json(#[from] serde_json::Error),
 }
 
+/// Aliased [`std::result::Result`] for this crate.
 pub type Result<T> = std::result::Result<T, self::Error>;
 
+/// An API client capable of making complete requests to Ed Discussion.
 #[derive(Clone, Debug)]
 pub struct Client {
     http: reqwest::Client,
