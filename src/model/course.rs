@@ -2,7 +2,7 @@ use derive_getters::{Dissolve, Getters};
 use serde::Deserialize;
 
 use super::{
-    lab::{Lab, LabID}, realm::RealmID, thread::CourseThreads, user::{digest_interval_deserialize, UserID}
+    lab::{Lab, LabID}, realm::RealmID, thread::{CourseThreads, Thread}, user::{digest_interval_deserialize, UserID}
 };
 
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
