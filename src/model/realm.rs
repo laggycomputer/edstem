@@ -1,6 +1,8 @@
 use derive_getters::{Dissolve, Getters};
 use serde::Deserialize;
 
+use super::Empty;
+
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq)]
 pub struct RealmID(usize);
 
@@ -41,7 +43,7 @@ pub struct Realm {
     type_: String,
     domain: String,
     associated_domains: String,
-    features: (),
+    features: Empty,
     settings: RealmSettings,
     affiliate_realm_id: Option<RealmID>,
 }

@@ -3,7 +3,7 @@ use serde::{Deserialize, Deserializer};
 
 use super::{
     course::{CourseRole, Role, SelfUserCourse},
-    realm::{Realm, RealmID},
+    realm::{Realm, RealmID}, Empty,
 };
 
 /// GET /api/user
@@ -118,7 +118,7 @@ pub struct User {
     email: String,
     username: Option<String>,
     avatar: Option<String>,
-    features: (),
+    features: Empty,
     settings: UserSettings,
     activated: bool,
     created_at: String,
