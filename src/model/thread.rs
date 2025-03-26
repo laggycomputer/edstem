@@ -170,7 +170,10 @@ pub struct PartialThread {
     user: Option<ThreadParticipant>,
 }
 
-// TODO
-struct CourseThreads {
-
+/// GET /api/courses/:id/threads
+#[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+pub struct CourseThreads {
+    sort_key: String,
+    threads: Vec<PartialThread>,
+    users: Vec<ThreadParticipant>,
 }
