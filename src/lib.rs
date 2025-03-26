@@ -87,4 +87,14 @@ impl Client {
         let endpoint = format!("/api/threads/{}", id.into());
         Ok(self.get(&*endpoint, None::<EmptyParams>).await?)
     }
+
+    /// Get a [`Thread`] by its number in its course.
+    ///
+    /// This number is not the thread ID but the 1-based number visible in the UI.
+    pub async fn get_thread_by_number(&self, course_id: impl Into<u64>, thread_number: u64) -> Result<Option<Thread>> {
+        let endpoint = format!("/api/courses/{}/threads/{}", course_id.into(), thread_number);
+        Ok(self.get(&*endpoint, None::<EmptyParams>).await?)
+    }
+
+    }
 }

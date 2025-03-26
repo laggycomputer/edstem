@@ -18,6 +18,10 @@ impl CourseID {
     pub async fn get_threads(&self, client: &crate::Client) -> crate::Result<CourseThreads> {
         client.get_course_threads(self.clone()).await
     }
+
+    pub async fn get_thread_by_number(&self, client: &crate::Client, thread_number: u64) -> crate::Result<Thread> {
+        client.get_thread_by_number(self, thread_number).await
+    }
 }
 
 /// overrides of global settings for a single course
