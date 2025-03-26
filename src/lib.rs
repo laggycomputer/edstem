@@ -64,6 +64,7 @@ impl Client {
         Ok(self.request(builder).await?)
     }
 
+    /// Get the [`SelfUser`] representing the user making API requests.
     pub async fn get_self_user(&self) -> Result<SelfUser> {
         Ok(self.get("/api/user", None::<EmptyParams>).await?)
     }

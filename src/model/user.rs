@@ -18,6 +18,12 @@ pub struct SelfUser {
     user: User,
 }
 
+impl SelfUser {
+    pub async fn get(client: &crate::Client) -> crate::Result<Self> {
+        client.get_self_user().await
+    }
+}
+
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
 pub struct UserID(u64);
 
