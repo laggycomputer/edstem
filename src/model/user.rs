@@ -129,7 +129,7 @@ struct User {
 
 /// a user as they appear as part of a response including threads
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
-struct ThreadParticipant {
+pub struct ThreadParticipant {
     id: UserID,
     // is this ever not "user"?
     role: String,
