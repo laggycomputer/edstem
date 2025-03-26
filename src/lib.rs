@@ -68,4 +68,10 @@ impl Client {
     pub async fn get_self_user(&self) -> Result<SelfUser> {
         Ok(self.get("/api/user", None::<EmptyParams>).await?)
     }
+
+    /// Get the [`CourseThreads`] pertaining to a course.
+    pub async fn get_course_threads(&self, id: impl Into<u64>) -> Result<CourseThreads> {
+        let endpoint = format!("/api/courses/{}/threads", id.into());
+        Ok(self.get(&*endpoint, None::<EmptyParams>).await?)
+    }
 }
