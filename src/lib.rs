@@ -97,6 +97,4 @@ impl Client {
         let endpoint = format!("/api/courses/{}/threads/{}", course_id.into(), thread_number);
         Ok(self.get(&*endpoint, None::<EmptyParams>).await?)
     }
-
-    }
 }
