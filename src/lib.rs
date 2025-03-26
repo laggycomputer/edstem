@@ -41,7 +41,33 @@ pub struct Client {
 
 type EmptyParams = &'static [((), ())];
 
+/// Options for creation of a new [`Client`].
+#[derive(Clone, Debug, Default)]
+pub struct ClientOptions {
+    /// A custom `reqwest::Client`, if desired.
+    pub http: Option<reqwest::Client>,
+    /// The base URL, if connecting to the "typical" Ed Discussion domain is not desired.
+    pub base_url: Option<String>,
+    /// A user agent string, if the default is not desired. 
+    pub user_agent: Option<String>,
+}
+
 impl Client {
+    /// Construct a new client with the minimum required arguments (i.e. a token).
+    pub fn new(token: &str) -> Self {
+        Self::new_with_opts(token, ClientOptions::default())
+    }
+
+    /// Construct a new client with [`ClientOptions`].
+    pub fn new_with_opts(token: &str, options: ClientOptions) -> Self {
+        Self {
+            http: options.http.unwrap_or_else(|| reqwest::Client::new()),
+            base_url: options.base_url.unwrap_or(String::from("https://us.edstem.org")),
+            token: String::from(token),
+            user_agent: options.user_agent.unwrap_or(String::from("edstem-rust"))
+        }
+    }
+
     async fn request<T>(&self, request: RequestBuilder) -> Result<T>
     where
         T: for<'de> Deserialize<'de>,
