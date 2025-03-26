@@ -20,7 +20,7 @@ impl CourseID {
     }
 
     pub async fn get_thread_by_number(&self, client: &crate::Client, thread_number: u64) -> crate::Result<Thread> {
-        client.get_thread_by_number(self, thread_number).await
+        client.get_thread_by_number(self.clone(), thread_number).await
     }
 }
 
