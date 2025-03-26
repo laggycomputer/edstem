@@ -73,7 +73,7 @@ where
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
-struct UserSettings {
+pub struct UserSettings {
     /// frequency of emails for new threads, in minutes
     ///
     /// an interval of 1 minute is labelled "instant" in the UI
