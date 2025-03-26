@@ -106,7 +106,7 @@ struct UserSettings {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
-struct User {
+pub struct User {
     id: UserID,
     role: CourseRole,
     name: String,
