@@ -4,6 +4,8 @@
 //! ## notes
 //!
 //! all `avatar` fields are an ID; the actual image is accessible at https://static.us.edusercontent.com/avatars/{id}
+//!
+//! all datetime fields are timezone-qualified ISO 8601 to microsecond precision
 #![deny(missing_docs)]
 
 use model::{thread::CourseThreads, user::SelfUser};

@@ -37,11 +37,8 @@ pub struct Reply {
     is_anonymous: bool,
     is_privte: bool,
     is_resolved: bool,
-    /// ISO 8601
     created_at: String,
-    /// ISO 8601
     updated_at: String,
-    /// ISO 8601
     deleted_at: Option<String>,
     #[serde(deserialize_with = "anonymous_id_deserialize")]
     anonymous_id: Option<u64>,
@@ -143,13 +140,9 @@ pub struct PartialThread {
     anonymous_comments: bool,
     // unsure what besides "approved" is possible
     approved_status: String,
-    /// ISO 8601
     created_at: String,
-    /// ISO 8601
     updated_at: String,
-    /// ISO 8601
     deleted_at: Option<String>,
-    /// IS0 8601
     pinned_at: Option<String>,
     /// if this was posted anonymously, a new proxy ID which represents the anonymous poster
     #[serde(deserialize_with = "anonymous_id_deserialize")]

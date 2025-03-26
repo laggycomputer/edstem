@@ -53,7 +53,6 @@ pub struct CourseRole {
     // tutorial: Option<_>,
     digest: bool,
     settings: CourseRoleSettings,
-    /// ISO 8601
     created_at: String,
     deleted_at: Option<String>,
 }
@@ -210,7 +209,6 @@ pub struct Course {
     status: String,
     features: CourseFeatures,
     settings: CourseSettings,
-    /// ISO 8601
     created_at: String,
     is_lab_regex_active: bool,
 }
@@ -220,6 +218,6 @@ pub struct SelfUserCourse {
     course: Course,
     role: CourseRole,
     lab: Option<Lab>,
-    /// ISO 8601
+    /// last time this course had any activity
     last_active: String,
 }

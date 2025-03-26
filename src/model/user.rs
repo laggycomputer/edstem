@@ -13,7 +13,6 @@ pub struct SelfUser {
     push_key: String,
     // push_subscriptions: Vec<_>,
     realms: Vec<Realm>,
-    /// appears to be ISO 8601
     time: String,
     user: User,
 }
@@ -105,7 +104,7 @@ pub struct UserSettings {
     allow_password_login: bool,
     desktop_notifications_enabled: bool,
     desktop_notifications_scopes: DesktopNotificationScopes,
-    // ISO 8601; set to the earliest valid ISO 8601 datetime in UTC if no snooze is active
+    /// set to the earliest valid ISO 8601 datetime in UTC if no snooze is active
     snooze_end: String,
     // lexical_access: Option<>,
     deactivated: bool,
