@@ -2,7 +2,7 @@ use derive_getters::{Dissolve, Getters};
 use serde::{Deserialize, Deserializer};
 
 use super::{
-    course::{CourseRole, Role, SelfUserCourse},
+    course::{Role, SelfUserCourse},
     realm::{Realm, RealmID}, Empty,
 };
 
@@ -113,7 +113,7 @@ pub struct UserSettings {
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
 pub struct User {
     id: UserID,
-    role: CourseRole,
+    role: String,
     name: String,
     email: String,
     username: Option<String>,
