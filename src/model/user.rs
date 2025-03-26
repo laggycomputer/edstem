@@ -126,3 +126,28 @@ struct User {
     has_pats: bool,
     realm_id: Option<RealmID>,
 }
+
+/// a user as they appear as part of a response including threads
+#[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+struct ThreadParticipant {
+    id: UserID,
+    // is this ever not "user"?
+    role: String,
+    name: String,
+    avatar: Option<String>,
+    course_role: Option<Role>,
+    // tutorials: ,
+}
+
+impl Into<ThreadParticipant> for User {
+    fn into(self) -> ThreadParticipant {
+        ThreadParticipant {
+            id: self.id,
+            // TODO: really?
+            role: String::from("user"),
+            name: self.name,
+            avatar: self.avatar,
+            course_role: self.course_role,
+        }
+    }
+}
