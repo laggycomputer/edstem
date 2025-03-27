@@ -46,6 +46,7 @@ pub enum ThreadListStyle {
 }
 
 /// The interval at which digest emails are sent, in minutes.
+/// `None` describes the UI setting labelled "Never".
 /// Note that despite being labelled "Instant" in the UI, such an option corresponds to an interval
 /// of 1 minute.
 ///
@@ -58,8 +59,8 @@ impl<'de> Deserialize<'de> for DigestInterval {
     where
         D: serde::Deserializer<'de>,
     {
-        let got = u64::deserialize(deserializer)?;
-        Ok(Self(NonZeroU64::try_from(got).ok()))
+        let got = Option::<u64>::deserialize(deserializer)?;
+        Ok(Self(got.map(NonZeroU64::new).flatten()))
     }
 }
 
