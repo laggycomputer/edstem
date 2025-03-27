@@ -35,7 +35,7 @@ pub struct Reply {
     vote_count: u64,
     is_endorsed: bool,
     is_anonymous: bool,
-    is_privte: bool,
+    is_private: bool,
     is_resolved: bool,
     created_at: String,
     updated_at: String,
