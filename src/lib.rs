@@ -8,6 +8,10 @@
 //! all datetime fields are timezone-qualified ISO 8601 to microsecond precision
 //!
 //! post bodies are written in an XML dialect: https://github.com/smartspot2/edapi/blob/9199e1001eb04b86bb8f68d0c5f9042453cd1387/docs/api_docs.md#L112
+//!
+//! ## features
+//!
+//! enable `serde` to add `Serialize` impls for structs
 #![deny(missing_docs)]
 
 use model::{
