@@ -11,6 +11,7 @@ use super::{
 };
 
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct ReplyID(u64);
 
 #[derive(Clone, Debug, Deserialize, Hash, PartialEq, Eq)]
