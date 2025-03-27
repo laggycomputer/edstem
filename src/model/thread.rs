@@ -275,7 +275,7 @@ pub struct Thread {
     is_seen: bool,
     is_starred: bool,
     is_watched: ThreadWatchStatus,
-    glanced_at: String,
+    glanced_at: Option<String>,
     new_reply_count: u64,
     duplicate_title: Option<String>,
     answers: Vec<Reply>,
