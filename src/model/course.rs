@@ -40,7 +40,7 @@ impl CourseID {
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
 #[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseRoleSettings {
-    digest_interval: DigestInterval, 
+    digest_interval: DigestInterval,
     email_announcements: Option<bool>,
 }
 

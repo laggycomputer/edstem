@@ -49,14 +49,14 @@ pub enum ThreadListStyle {
 /// Note that despite being labelled "Instant" in the UI, such an option corresponds to an interval
 /// of 1 minute.
 ///
-/// This setting may describe a user as a whole or a specific course. 
+/// This setting may describe a user as a whole or a specific course.
 #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, Dissolve)]
 pub struct DigestInterval(Option<NonZeroU64>);
 
-impl <'de> Deserialize<'de> for DigestInterval {
+impl<'de> Deserialize<'de> for DigestInterval {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de> 
+        D: serde::Deserializer<'de>,
     {
         let got = u64::deserialize(deserializer)?;
         Ok(Self(NonZeroU64::try_from(got).ok()))
@@ -67,7 +67,7 @@ impl <'de> Deserialize<'de> for DigestInterval {
 impl Serialize for DigestInterval {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: serde::Serializer 
+        S: serde::Serializer,
     {
         self.0.map(|o| o.get()).unwrap_or(0).serialize(serializer)
     }
@@ -102,7 +102,7 @@ pub struct DesktopNotificationScopes {
 #[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct UserSettings {
     /// frequency of emails for new threads, in minutes
-    digest_interval: DigestInterval, 
+    digest_interval: DigestInterval,
     /// "Thread List Style" in appearance settings
     discuss_feed_style: ThreadListStyle,
     accessible: bool,
