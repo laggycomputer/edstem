@@ -66,7 +66,7 @@ impl Into<u64> for ThreadID {
 }
 
 impl ThreadID {
-    pub async fn get(&self, client: &crate::Client) -> crate::Result<Thread> {
+    pub async fn get(&self, client: &crate::Client) -> crate::Result<ThreadResponse> {
         client.get_thread(self.clone()).await
     }
 }
@@ -280,4 +280,11 @@ pub struct Thread {
     duplicate_title: Option<String>,
     answers: Vec<Reply>,
     comments: Vec<Reply>,
+}
+
+/// The full response when a thread is fetched individually, i.e. GET /api/threads/:id
+#[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
+pub struct ThreadResponse {
+    thread: Thread,
 }

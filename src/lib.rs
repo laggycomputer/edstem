@@ -15,7 +15,7 @@
 #![deny(missing_docs)]
 
 use model::{
-    thread::{CourseThreads, Thread},
+    thread::{CourseThreads, ThreadResponse},
     user::SelfUser,
 };
 use reqwest::RequestBuilder;
@@ -120,7 +120,7 @@ impl Client {
     }
 
     /// Get a [`Thread`] by ID.
-    pub async fn get_thread(&self, id: impl Into<u64>) -> Result<Thread> {
+    pub async fn get_thread(&self, id: impl Into<u64>) -> Result<ThreadResponse> {
         let endpoint = format!("/api/threads/{}", id.into());
         Ok(self.get(&*endpoint, None::<EmptyParams>).await?)
     }
@@ -132,7 +132,7 @@ impl Client {
         &self,
         course_id: impl Into<u64>,
         thread_number: u64,
-    ) -> Result<Thread> {
+    ) -> Result<ThreadResponse> {
         let endpoint = format!(
             "/api/courses/{}/threads/{}",
             course_id.into(),

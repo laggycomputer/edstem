@@ -6,7 +6,7 @@ use serde::Serialize;
 use super::{
     lab::{Lab, LabID},
     realm::RealmID,
-    thread::{CourseThreads, Thread},
+    thread::{CourseThreads, ThreadResponse},
     user::{DigestInterval, UserID},
 };
 
@@ -29,7 +29,7 @@ impl CourseID {
         &self,
         client: &crate::Client,
         thread_number: u64,
-    ) -> crate::Result<Thread> {
+    ) -> crate::Result<ThreadResponse> {
         client
             .get_thread_by_number(self.clone(), thread_number)
             .await
