@@ -1,13 +1,19 @@
+use std::num::NonZeroU64;
+
 use derive_getters::{Dissolve, Getters};
-use serde::{Deserialize, Deserializer};
+use serde::Deserialize;
+#[cfg(feature = "serde")]
+use serde::Serialize;
 
 use super::{
+    Empty,
     course::{Role, SelfUserCourse},
-    realm::{Realm, RealmID}, Empty,
+    realm::{Realm, RealmID},
 };
 
 /// GET /api/user
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct SelfUser {
     courses: Vec<SelfUserCourse>,
     push_key: String,
@@ -24,9 +30,11 @@ impl SelfUser {
 }
 
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct UserID(u64);
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub enum ThreadListStyle {
     #[serde(rename = "full")]
     Full,
@@ -37,7 +45,36 @@ pub enum ThreadListStyle {
     Other(String),
 }
 
+/// The interval at which digest emails are sent, in minutes.
+/// Note that despite being labelled "Instant" in the UI, such an option corresponds to an interval
+/// of 1 minute.
+///
+/// This setting may describe a user as a whole or a specific course. 
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, Dissolve)]
+pub struct DigestInterval(Option<NonZeroU64>);
+
+impl <'de> Deserialize<'de> for DigestInterval {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de> 
+    {
+        let got = u64::deserialize(deserializer)?;
+        Ok(Self(NonZeroU64::try_from(got).ok()))
+    }
+}
+
+#[cfg(feature = "serde")]
+impl Serialize for DigestInterval {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer 
+    {
+        self.0.map(|o| o.get()).unwrap_or(0).serialize(serializer)
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub enum Theme {
     #[serde(rename = "os")]
     OS,
@@ -49,6 +86,7 @@ pub enum Theme {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct DesktopNotificationScopes {
     announcement: bool,
     // currently no way to change this in UI
@@ -60,25 +98,11 @@ pub struct DesktopNotificationScopes {
     watch: bool,
 }
 
-pub(crate) fn digest_interval_deserialize<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let value = Option::<u64>::deserialize(deserializer)?;
-    Ok(match value {
-        Some(0) => None,
-        other => other,
-    })
-}
-
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct UserSettings {
     /// frequency of emails for new threads, in minutes
-    ///
-    /// an interval of 1 minute is labelled "instant" in the UI
-    /// an interval of 0 minutes is labelled "none" in the UI and is rendered here as [`None`]
-    #[serde(deserialize_with = "digest_interval_deserialize")]
-    digest_interval: Option<u64>,
+    digest_interval: DigestInterval, 
     /// "Thread List Style" in appearance settings
     discuss_feed_style: ThreadListStyle,
     accessible: bool,
@@ -111,6 +135,7 @@ pub struct UserSettings {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct User {
     id: UserID,
     role: String,
@@ -134,6 +159,7 @@ pub struct User {
 
 /// a user as they appear as part of a response including threads
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct ThreadParticipant {
     id: UserID,
     // is this ever not "user"?

@@ -10,7 +10,10 @@
 //! post bodies are written in an XML dialect: https://github.com/smartspot2/edapi/blob/9199e1001eb04b86bb8f68d0c5f9042453cd1387/docs/api_docs.md#L112
 #![deny(missing_docs)]
 
-use model::{thread::{CourseThreads, Thread}, user::SelfUser};
+use model::{
+    thread::{CourseThreads, Thread},
+    user::SelfUser,
+};
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
@@ -48,7 +51,7 @@ pub struct ClientOptions {
     pub http: Option<reqwest::Client>,
     /// The base URL, if connecting to the "typical" Ed Discussion domain is not desired.
     pub base_url: Option<String>,
-    /// A user agent string, if the default is not desired. 
+    /// A user agent string, if the default is not desired.
     pub user_agent: Option<String>,
 }
 
@@ -62,9 +65,11 @@ impl Client {
     pub fn new_with_opts(token: &str, options: ClientOptions) -> Self {
         Self {
             http: options.http.unwrap_or_else(|| reqwest::Client::new()),
-            base_url: options.base_url.unwrap_or(String::from("https://us.edstem.org")),
+            base_url: options
+                .base_url
+                .unwrap_or(String::from("https://us.edstem.org")),
             token: String::from(token),
-            user_agent: options.user_agent.unwrap_or(String::from("edstem-rust"))
+            user_agent: options.user_agent.unwrap_or(String::from("edstem-rust")),
         }
     }
 
@@ -119,8 +124,16 @@ impl Client {
     /// Get a [`Thread`] by its number in its course.
     ///
     /// This number is not the thread ID but the 1-based number visible in the UI.
-    pub async fn get_thread_by_number(&self, course_id: impl Into<u64>, thread_number: u64) -> Result<Thread> {
-        let endpoint = format!("/api/courses/{}/threads/{}", course_id.into(), thread_number);
+    pub async fn get_thread_by_number(
+        &self,
+        course_id: impl Into<u64>,
+        thread_number: u64,
+    ) -> Result<Thread> {
+        let endpoint = format!(
+            "/api/courses/{}/threads/{}",
+            course_id.into(),
+            thread_number
+        );
         Ok(self.get(&*endpoint, None::<EmptyParams>).await?)
     }
 }

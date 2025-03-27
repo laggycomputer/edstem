@@ -1,11 +1,17 @@
 use derive_getters::{Dissolve, Getters};
 use serde::Deserialize;
+#[cfg(feature = "serde")]
+use serde::Serialize;
 
 use super::{
-    lab::{Lab, LabID}, realm::RealmID, thread::{CourseThreads, Thread}, user::{digest_interval_deserialize, UserID}
+    lab::{Lab, LabID},
+    realm::RealmID,
+    thread::{CourseThreads, Thread},
+    user::{DigestInterval, UserID},
 };
 
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseID(u64);
 
 impl Into<u64> for CourseID {
@@ -19,21 +25,28 @@ impl CourseID {
         client.get_course_threads(self.clone()).await
     }
 
-    pub async fn get_thread_by_number(&self, client: &crate::Client, thread_number: u64) -> crate::Result<Thread> {
-        client.get_thread_by_number(self.clone(), thread_number).await
+    pub async fn get_thread_by_number(
+        &self,
+        client: &crate::Client,
+        thread_number: u64,
+    ) -> crate::Result<Thread> {
+        client
+            .get_thread_by_number(self.clone(), thread_number)
+            .await
     }
 }
 
 /// overrides of global settings for a single course
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseRoleSettings {
-    #[serde(deserialize_with = "digest_interval_deserialize")]
-    digest_interval: Option<u64>,
+    digest_interval: DigestInterval, 
     email_announcements: Option<bool>,
 }
 
 /// The role of a [`crate::model::user::User`] in a [`Course`]
 #[derive(Clone, Debug, Deserialize, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub enum Role {
     #[serde(rename = "student")]
     Student,
@@ -49,6 +62,7 @@ pub enum Role {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseRole {
     user_id: UserID,
     course_id: CourseID,
@@ -62,12 +76,14 @@ pub struct CourseRole {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseFeatures {
     analytics: bool,
     discussion: bool,
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct Category {
     name: String,
     subcategories: Vec<Box<Category>>,
@@ -75,6 +91,7 @@ pub struct Category {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseDiscussionSettings {
     /// can private threads be created?
     private: bool,
@@ -105,8 +122,7 @@ pub struct CourseDiscussionSettings {
     bot_avatar: String,
     full_announcement_emails: bool,
     no_digests: bool,
-    #[serde(deserialize_with = "digest_interval_deserialize")]
-    digest_interval: Option<u64>,
+    digest_interval: DigestInterval,
     saved_replies_enabled: bool,
     saved_replies: Vec<String>,
     sortable_feed: bool,
@@ -125,6 +141,7 @@ pub struct CourseDiscussionSettings {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseChatSettings {
     student_dm_student: bool,
     student_dm_staff: bool,
@@ -132,6 +149,7 @@ pub struct CourseChatSettings {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseLessonSettings {
     quiz_question_auto_submit: bool,
     karel_slide_enabled: bool,
@@ -141,11 +159,13 @@ pub struct CourseLessonSettings {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseWorkspaceSettingsInner {
     rstudio_layout: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseWorkspaceSettings {
     default_type: String,
     student_creation_disabled: bool,
@@ -160,6 +180,7 @@ pub struct CourseWorkspaceSettings {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseCodeEditorSettings {
     // show_invisibles: Option<_>,
     // detect_indentation: Option<_>,
@@ -169,6 +190,7 @@ pub struct CourseCodeEditorSettings {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseTheme {
     logo: String,
     background: String,
@@ -176,6 +198,7 @@ pub struct CourseTheme {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseRoleLabels {
     student: String,
     mentor: String,
@@ -185,6 +208,7 @@ pub struct CourseRoleLabels {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseSettings {
     default_page: String,
     user_lab_enrollment: bool,
@@ -204,6 +228,7 @@ pub struct CourseSettings {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct Course {
     id: CourseID,
     realm_id: RealmID,
@@ -219,6 +244,7 @@ pub struct Course {
 }
 
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct SelfUserCourse {
     course: Course,
     role: CourseRole,

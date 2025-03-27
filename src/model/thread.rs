@@ -1,12 +1,20 @@
+use std::num::NonZeroU64;
+
 use derive_getters::{Dissolve, Getters};
 use serde::{Deserialize, Deserializer};
+#[cfg(feature = "serde")]
+use serde::{Serialize, Serializer};
 
-use super::{course::CourseID, user::{ThreadParticipant, UserID}};
+use super::{
+    course::CourseID,
+    user::{ThreadParticipant, UserID},
+};
 
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
 pub struct ReplyID(u64);
 
 #[derive(Clone, Debug, Deserialize, Hash, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 #[serde(rename_all = "lowercase")]
 pub enum ReplyType {
     Comment,
@@ -15,6 +23,7 @@ pub enum ReplyType {
 
 /// a reply to a thread
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct Reply {
     id: ReplyID,
     user_id: UserID,
@@ -40,13 +49,13 @@ pub struct Reply {
     created_at: String,
     updated_at: String,
     deleted_at: Option<String>,
-    #[serde(deserialize_with = "anonymous_id_deserialize")]
-    anonymous_id: Option<u64>,
+    anonymous_id: MaybeAnonymousID,
     vote: u64,
     comments: Vec<Reply>,
 }
 
 #[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct ThreadID(u64);
 
 impl Into<u64> for ThreadID {
@@ -61,19 +70,41 @@ impl ThreadID {
     }
 }
 
-pub(crate) fn anonymous_id_deserialize<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let value = u64::deserialize(deserializer)?;
-    Ok(match value {
-        0 => None,
-        other => Some(other),
-    })
+/// An ID assigned to users who post or reply anonymously.
+/// This ID is only meaningful within the thread in which it is found.
+#[derive(Copy, Clone, Debug, Deserialize, Hash, PartialEq, Eq, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
+pub struct AnonymousID(NonZeroU64);
+
+/// A thin wrapper around `Option<AnonymousID>` with serde glue.
+/// A `None::<AnonymousID>` will be represented as `0`, to conform with the way Ed Discussion
+/// returns them.
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, Dissolve)]
+pub struct MaybeAnonymousID(Option<AnonymousID>);
+
+impl<'de> Deserialize<'de> for MaybeAnonymousID {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let got = u64::deserialize(deserializer)?;
+        Ok(Self(NonZeroU64::new(got).map(AnonymousID)))
+    }
+}
+
+#[cfg(feature = "serde")]
+impl Serialize for MaybeAnonymousID {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        self.0.map(|a| a.0.get()).unwrap_or(0).serialize(serializer)
+    }
 }
 
 /// the type of a thread
 #[derive(Clone, Debug, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 #[serde(rename_all = "lowercase")]
 pub enum ThreadType {
     Question,
@@ -106,8 +137,23 @@ impl<'de> Deserialize<'de> for ThreadWatchStatus {
     }
 }
 
+#[cfg(feature = "serde")]
+impl Serialize for ThreadWatchStatus {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match &self {
+            Self::NotWatching => None::<bool>.serialize(serializer),
+            Self::Ignoring => Some(false).serialize(serializer),
+            Self::Watching => Some(true).serialize(serializer),
+        }
+    }
+}
+
 /// threads as they appear when fetching a course
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct PartialThread {
     id: ThreadID,
     user_id: UserID,
@@ -155,9 +201,7 @@ pub struct PartialThread {
     updated_at: String,
     deleted_at: Option<String>,
     pinned_at: Option<String>,
-    /// if this was posted anonymously, a new proxy ID which represents the anonymous poster
-    #[serde(deserialize_with = "anonymous_id_deserialize")]
-    anonymous_id: Option<u64>,
+    anonymous_id: MaybeAnonymousID,
     vote: u64,
     /// whether this thread has been seen by the requesting user
     is_seen: bool,
@@ -176,6 +220,7 @@ pub struct PartialThread {
 
 /// GET /api/courses/:id/threads
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct CourseThreads {
     sort_key: String,
     threads: Vec<PartialThread>,
@@ -184,6 +229,7 @@ pub struct CourseThreads {
 
 /// Data from a thread when requested by ID
 #[derive(Clone, Debug, Deserialize, Getters, Dissolve)]
+#[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct Thread {
     id: ThreadID,
     user_id: UserID,
@@ -223,8 +269,7 @@ pub struct Thread {
     updated_at: String,
     deleted_at: Option<String>,
     pinned_at: Option<String>,
-    #[serde(deserialize_with = "anonymous_id_deserialize")]
-    anonymous_id: Option<u64>,
+    anonymous_id: MaybeAnonymousID,
     vote: u64,
     is_seen: bool,
     is_starred: bool,
