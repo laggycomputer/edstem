@@ -116,9 +116,15 @@ impl Client {
     }
 
     /// Get the [`CourseThreads`] pertaining to a course.
-    pub async fn get_course_threads(&self, id: impl Into<u64>, options: Option<GetCourseThreadsOptions>) -> Result<CourseThreads> {
+    pub async fn get_course_threads(
+        &self,
+        id: impl Into<u64>,
+        options: Option<GetCourseThreadsOptions>,
+    ) -> Result<CourseThreads> {
         let endpoint = format!("/api/courses/{}/threads", id.into());
-        Ok(self.get(&*endpoint, options.map(|o| o.as_params()).await?))
+        Ok(self
+            .get(&*endpoint, options.as_ref().map(|o| o.as_params()).as_deref())
+            .await?)
     }
 
     /// Get a [`Thread`] by ID.

@@ -1,11 +1,16 @@
+//! Options for API requests.
+
 use serde::{Deserialize, Serialize};
 
-/// Options to [`crate::Client::get_course_threads`]. Note that `limit` appears to be limited to at
-/// most 100 by Ed Discussion.
+/// Options to [`crate::Client::get_course_threads`], centered on skip-take pagination.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 pub struct GetCourseThreadsOptions {
+    /// The limit on the number of threads to return. Values not greater than 100 appear to be
+    /// treated as 100 by Ed Discussion.
     pub limit: u64,
+    /// The offset at which to begin; i.e. how many threads to skip before beginning to yield
+    /// threads.
     pub offset: u64,
     // not sure what this does
     // pub sort: String,

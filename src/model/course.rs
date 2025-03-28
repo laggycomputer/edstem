@@ -23,7 +23,11 @@ impl Into<u64> for CourseID {
 }
 
 impl CourseID {
-    pub async fn get_threads(&self, client: &crate::Client, options: Option<GetCourseThreadsOptions>) -> crate::Result<CourseThreads> {
+    pub async fn get_threads(
+        &self,
+        client: &crate::Client,
+        options: Option<GetCourseThreadsOptions>,
+    ) -> crate::Result<CourseThreads> {
         client.get_course_threads(self.clone(), options).await
     }
 
