@@ -3,6 +3,8 @@ use serde::Deserialize;
 #[cfg(feature = "serde")]
 use serde::Serialize;
 
+use crate::opts::GetCourseThreadsOptions;
+
 use super::{
     lab::{Lab, LabID},
     realm::RealmID,
@@ -21,8 +23,8 @@ impl Into<u64> for CourseID {
 }
 
 impl CourseID {
-    pub async fn get_threads(&self, client: &crate::Client) -> crate::Result<CourseThreads> {
-        client.get_course_threads(self.clone()).await
+    pub async fn get_threads(&self, client: &crate::Client, options: Option<GetCourseThreadsOptions>) -> crate::Result<CourseThreads> {
+        client.get_course_threads(self.clone(), options).await
     }
 
     pub async fn get_thread_by_number(

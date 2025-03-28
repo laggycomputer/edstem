@@ -18,10 +18,12 @@ use model::{
     thread::{CourseThreads, ThreadResponse},
     user::SelfUser,
 };
+use opts::GetCourseThreadsOptions;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
 pub mod model;
+pub mod opts;
 
 /// Unified error type from the crate.
 #[derive(Debug, thiserror::Error)]
@@ -114,9 +116,9 @@ impl Client {
     }
 
     /// Get the [`CourseThreads`] pertaining to a course.
-    pub async fn get_course_threads(&self, id: impl Into<u64>) -> Result<CourseThreads> {
+    pub async fn get_course_threads(&self, id: impl Into<u64>, options: Option<GetCourseThreadsOptions>) -> Result<CourseThreads> {
         let endpoint = format!("/api/courses/{}/threads", id.into());
-        Ok(self.get(&*endpoint, None::<EmptyParams>).await?)
+        Ok(self.get(&*endpoint, options.map(|o| o.as_params()).await?))
     }
 
     /// Get a [`Thread`] by ID.
