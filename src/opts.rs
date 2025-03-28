@@ -8,22 +8,13 @@ use strum_macros::AsRefStr;
 
 /// How to sort responses as part of [`GetCourseThreadsOptions`].
 /// All unit variants are sort keys with known meaning.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, AsRefStr)]
+#[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
+#[non_exhaustive]
 pub enum GetCourseThreadsSortKey {
     /// Newest threads first.
     New,
-    /// Another sort key not known to this crate.
-    Other(String),
-}
-
-impl ToString for GetCourseThreadsSortKey {
-    fn to_string(&self) -> String {
-        match self {
-            Self::New => String::from("new"),
-            Self::Other(inner) => inner.clone(),
-        }
-    }
 }
 
 /// A filter mode for [`GetCourseThreadsOptions`].
@@ -91,7 +82,7 @@ impl GetCourseThreadsOptions {
         let mut ret = vec![
             ("limit", self.limit.to_string()),
             ("offset", self.offset.to_string()),
-            ("sort", self.sort.to_string()),
+            ("sort", self.sort.as_ref().to_string()),
         ];
 
         if let Some(ref filter) = self.filter {
