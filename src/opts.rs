@@ -1,6 +1,9 @@
 //! Options for API requests.
 
-use serde::{Deserialize, Serialize};
+#[cfg(feature = "serde")]
+use serde::Deserialize;
+
+use serde::Serialize;
 
 /// Options to [`crate::Client::get_course_threads`], centered on skip-take pagination.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
