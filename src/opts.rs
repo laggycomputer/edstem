@@ -11,6 +11,7 @@ use strum_macros::AsRefStr;
 #[derive(Clone, Debug, PartialEq, Eq, AsRefStr)]
 #[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "lowercase"))]
 #[non_exhaustive]
 pub enum GetCourseThreadsSortKey {
     /// Newest threads first.
@@ -21,6 +22,7 @@ pub enum GetCourseThreadsSortKey {
 #[derive(Clone, Debug, PartialEq, Eq, AsRefStr)]
 #[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "lowercase"))]
 #[non_exhaustive]
 pub enum GetCourseThreadsFilterKey {
     /// Return only threads not already read by the current logged in user.
