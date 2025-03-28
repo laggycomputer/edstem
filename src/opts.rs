@@ -49,6 +49,8 @@ pub enum GetCourseThreadsFilterKey {
     /// Return only threads initially posted by course staff.
     Staff,
     /// Return only threads initially posted by the current logged in user.
+    #[strum(serialize = "mine")]
+    #[cfg_attr(feature = "serde", serde(rename = "mine"))]
     Me,
 }
 
