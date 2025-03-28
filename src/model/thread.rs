@@ -27,6 +27,7 @@ pub enum ReplyType {
 #[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct Reply {
     id: ReplyID,
+    /// Always 0 if the author is anonymous.
     user_id: UserID,
     course_id: CourseID,
     thread_id: ThreadID,
@@ -157,6 +158,7 @@ impl Serialize for ThreadWatchStatus {
 #[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct PartialThread {
     id: ThreadID,
+    /// Always 0 if the author is anonymous.
     user_id: UserID,
     course_id: CourseID,
     original_id: Option<ThreadID>,
@@ -233,6 +235,7 @@ pub struct CourseThreads {
 #[cfg_attr(feature = "serde", derive(Serialize))]
 pub struct Thread {
     id: ThreadID,
+    /// Always 0 if the author is anonymous.
     user_id: UserID,
     course_id: CourseID,
     original_id: Option<ThreadID>,
