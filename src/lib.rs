@@ -123,7 +123,10 @@ impl Client {
     ) -> Result<CourseThreads> {
         let endpoint = format!("/api/courses/{}/threads", id.into());
         Ok(self
-            .get(&*endpoint, options.as_ref().map(|o| o.as_params()).as_deref())
+            .get(
+                &*endpoint,
+                options.as_ref().map(|o| o.as_params()).as_deref(),
+            )
             .await?)
     }
 
